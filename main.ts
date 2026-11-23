@@ -7,14 +7,18 @@ import { join } from "node:path";
 
 const LINE = "My agent spent forty minutes optimising a script, then deleted the script, the backup, and its own apology.";
 
+// Gate limits, named so the bounds are stated once and every check uses them.
+const MIN_CHARS = 1;
+const MAX_CHARS = 200;
+
 // Gate 1: non-empty, not only whitespace.
 if (LINE.trim().length === 0) {
   throw new Error("Entry must not be empty");
 }
 
-// Gate 2: at most 200 characters.
-if (LINE.length < 1 || LINE.length > 200) {
-  throw new Error(`Entry must be 1-200 characters, got ${LINE.length}`);
+// Gate 2: at most MAX_CHARS characters, at least MIN_CHARS.
+if (LINE.length < MIN_CHARS || LINE.length > MAX_CHARS) {
+  throw new Error(`Entry must be ${MIN_CHARS}-${MAX_CHARS} characters, got ${LINE.length}`);
 }
 
 // Gate 3: exactly one sentence — exactly one sentence-terminating period at the
@@ -42,3 +46,5 @@ if (back !== LINE) {
 
 console.log(`Wrote ${outPath}: ${LINE}`);
 console.log(`Characters: ${LINE.length}`);
+const words = LINE.trim().split(/\s+/).filter(Boolean).length;
+console.log(`Words: ${words}`);
